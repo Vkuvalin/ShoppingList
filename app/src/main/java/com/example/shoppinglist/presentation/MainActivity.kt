@@ -17,9 +17,5 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this){
             Log.d("MainActivity0", it.toString())
         }
-        viewModel.getShopList()
-
-        viewModel.deleteShopItem(0)
-        viewModel.changeEnableState(1)
     }
 }
