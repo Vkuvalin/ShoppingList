@@ -14,7 +14,6 @@ object ShopListRepositoryImpl: ShopListRepository  {
 // Это короче метод сортиворки массива (потом когда-нибудь почитать)
 //    private val shopList = sortedSetOf<ShopItem>(object : Comparator<ShopItem>{
 //        override fun compare(p0: ShopItem?, p1: ShopItem?): Int {
-//            TODO("Not yet implemented")
 //        }
 //    })
 
