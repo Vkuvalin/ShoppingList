@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.shoppinglist.R
 
-class ShopItemSragment: Fragment() {
+class ShopItemFragment: Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
