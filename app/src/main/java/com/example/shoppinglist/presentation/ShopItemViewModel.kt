@@ -53,7 +53,6 @@ class ShopItemViewModel : ViewModel() {
         }
     }
 
-
     fun editShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
@@ -96,10 +95,6 @@ class ShopItemViewModel : ViewModel() {
         return result
     }
 
-    private fun finishWork() {
-        _shouldCloseScreen.value = Unit
-    }
-
     // Пока не понятно, как вот эти применять. По идеи нужно навесить слушатель
     fun resetErrorInputName() {
         _errorInputName.value = false
@@ -108,4 +103,9 @@ class ShopItemViewModel : ViewModel() {
     fun resetErrorInputCount() {
         _errorInputCount.value = false
     }
+
+    private fun finishWork() {
+        _shouldCloseScreen.value = Unit
+    }
+
 }
