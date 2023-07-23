@@ -1,7 +1,10 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -9,16 +12,25 @@ import com.example.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
+
+    //region Почему тут null и нулабельный тип + немного об альбомной ориентации
+    /*
+    shopItemContainer = findViewById(R.id.shop_item_container) - найдется только, если мы будем,
+    в альбомной ориентации, в ином случае - null.
+    */
+    //endregion
+    private var shopItemContainer: FragmentContainerView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        shopItemContainer = findViewById(R.id.shop_item_container)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this){
@@ -28,10 +40,42 @@ class MainActivity : AppCompatActivity() {
 
         val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
         buttonAddItem.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAddItem(this@MainActivity)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAddItem(this@MainActivity)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
         }
+    }
 
+
+    private fun isOnePaneMode(): Boolean {
+        return shopItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        //region Зачем методу .addToBackStack(name) нужно имя?
+        /*
+        Если у нас в BackStack'е лежит допустим 5 фрагментом, и нам нужно при клике "назад", из 5го
+        перейти в 1, то для этого мы и даем именя фрагментов.
+        Где потом, можем их применить? В методе .popBackStack(name: String?, flags: Int)
+
+        Пример реализации:
+        override fun onBackPressed() {
+            // Удалится вплоть до тега "add"
+            supportFragmentManager.popBackStack(add, 0)
+
+            // Удалится включительно с тегом "add"
+            supportFragmentManager.popBackStack(add, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+        */
+        //endregion
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shop_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupRecyclerView() {
@@ -51,10 +95,10 @@ class MainActivity : AppCompatActivity() {
         }
         setupLongClickListener()
         setupClickListener()
-        setumSwipeListener(rvShopList)
+        setupSwipeListener(rvShopList)
     }
 
-    private fun setumSwipeListener(rvShopList: RecyclerView) {
+    private fun setupSwipeListener(rvShopList: RecyclerView) {
         val callback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -79,8 +123,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEditItem(this@MainActivity, it.id)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentEditItem(this@MainActivity, it.id)
+                startActivity(intent)
+            }else{
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 
@@ -88,5 +136,12 @@ class MainActivity : AppCompatActivity() {
         shopListAdapter.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
         }
+    }
+
+
+    /* ####################################### ИНТЕРФЕЙСЫ ####################################### */
+    override fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }

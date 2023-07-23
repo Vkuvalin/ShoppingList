@@ -6,16 +6,21 @@ import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
 import kotlin.random.Random
 
+
+// Доделать потом здесь базу данных!!!! Ох, в скольких же прилах я смогу трениться!!!!!!!!!
+
 object ShopListRepositoryImpl: ShopListRepository  {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
-    // Под капотом он ссылается на TreeSet, а в лямба выражении указывается, по каким парам сортировать
-    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.id.compareTo(p1.id) })
-// Это короче метод сортиворки массива (потом когда-нибудь почитать)
+    //region sortedSetOf
+    // Под капотом он ссылается на TreeSet, а в лямба выражении указывается, по каким парам сортировать.
+    // Это короче метод сортиворки массива (потом когда-нибудь почитать)
 //    private val shopList = sortedSetOf<ShopItem>(object : Comparator<ShopItem>{
 //        override fun compare(p0: ShopItem?, p1: ShopItem?): Int {
 //        }
 //    })
+    //endregion
+    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.id.compareTo(p1.id) })
 
     private var autoIncrementId = 0
 

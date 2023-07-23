@@ -6,4 +6,6 @@
     <string name="save_text_button">Save</string>
     <string name="error_input_name">Name error</string>
     <string name="error_input_count">Count error</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

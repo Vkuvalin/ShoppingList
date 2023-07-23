@@ -95,7 +95,6 @@ class ShopItemViewModel : ViewModel() {
         return result
     }
 
-    // Пока не понятно, как вот эти применять. По идеи нужно навесить слушатель
     fun resetErrorInputName() {
         _errorInputName.value = false
     }
