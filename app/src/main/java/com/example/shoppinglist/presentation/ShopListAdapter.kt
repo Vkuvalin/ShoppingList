@@ -62,6 +62,8 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCa
         val binding = viewHolder.binding
         val shopItem = getItem(position)
 
+        //region Реализация до data-binding
+        /*
         when (binding){ // Почему так? Смотри "комментарий" выше
             is ItemShopDisabledBinding -> {
                 binding.tvName.text = shopItem.name
@@ -70,6 +72,16 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCa
             is ItemShopEnabledBinding -> {
                 binding.tvName.text = shopItem.name
                 binding.tvCount.text = shopItem.count.toString()
+            }
+        }
+        */
+        //endregion
+        when (binding){ // Почему так? Смотри "комментарий" выше
+            is ItemShopDisabledBinding -> {
+                binding.shopItem = shopItem
+            }
+            is ItemShopEnabledBinding -> {
+                binding.shopItem = shopItem
             }
         }
 
